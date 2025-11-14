@@ -48,7 +48,7 @@ export const Navbar = () => {
         </div>
 
         {/* CENTER: Nav Links */}
-        <div className='flex justify-center w-1/3 space-x-6 font-semibold text-sm'>
+        <div className='flex justify-center w-1/3 space-x-6 font-semibold text-lg'>
           <Link to="/" className='hover:text-red-600 transition'>Home</Link>
           <Link to="/shop" className='hover:text-red-600 transition'>Shop</Link>
           <Link to="/about" className='hover:text-red-600 transition'>About</Link>
@@ -76,7 +76,7 @@ export const Navbar = () => {
             <FaSearch className='absolute top-3 right-3 text-red-500' />
           </form>
 
-          <button className='hidden md:block text-sm font-medium' onClick={openLogin}>
+          <button className='hidden md:block text-lg font-medium' onClick={openLogin}>
             Login | Register
           </button>
 
