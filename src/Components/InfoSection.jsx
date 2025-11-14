@@ -20,7 +20,7 @@ const InfoSection = () => {
         },
          {
             icon:<FaLock className='text-3xl text-red-600'/>,
-            title: 'Secure Payment',
+            title: 'Great Deals',
             description: ' Your payment information is safe with us'
         },
          {
