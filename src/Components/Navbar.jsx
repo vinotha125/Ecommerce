@@ -86,7 +86,7 @@ export const Navbar = () => {
         </div>
       </div>
 
-      {/* AUTH MODAL */}
+    
       <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
         {isLogin ? <Login openSignUp={openSignUp} /> : <Register openLogin={openLogin} />}
       </Modal>
