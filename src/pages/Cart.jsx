@@ -51,7 +51,7 @@ const Cart = () => {
                     </div>
 
                     <div className="flex items-center space-x-12">
-                      <p>${product.price}</p>
+                      <p>₹{product.price}</p>
 
                       <div className="flex items-center justify-center border">
                         <button className="text-xl font-bold px-1.5 border-1"
@@ -61,7 +61,7 @@ const Cart = () => {
                         onClick={()=>dispatch(increaseQuantity(product.id))}>+</button>
                       </div>
 
-                      <p>${(product.quantity * product.price).toFixed(2)}</p>
+                      <p>₹{(product.quantity * product.price).toFixed(2)}</p>
 
                       <button className="text-red-500 hover:text-red-700"
                       onClick={()=>dispatch(removeFromCart(product.id))}>
@@ -90,7 +90,7 @@ const Cart = () => {
                 </div>
                 <div className="flex justify-between mb-4">
                   <span>Total Price:</span>
-                  <span>${cart.totalPrice.toFixed(2)}</span>
+                  <span>₹{cart.totalPrice.toFixed(2)}</span>
                 </div>
                 <button className="w-full bg-red-600 text-white py-2 hover:bg-red-800"
                  onClick={()=>Navigate('/checkout')}>

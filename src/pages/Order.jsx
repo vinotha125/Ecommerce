@@ -34,11 +34,10 @@ const Order = ({ order }) => {
       </div>
       <div className='mt-4 flex justify-between'>
         <span>Total Price</span>
-        <span className='font-semibold'>${order.totalPrice.toFixed(2)}</span>
+        <span className='font-semibold'>₹{order.totalPrice.toFixed(2)}</span>
       </div>
       </div>
       <div className='mt-6'>
-        <button className='bg-green-500 text-white py-2 px-4 hover:bg-green-600'>Order tracking</button>
         <button className='ml-4 bg-red-600 text-white py-2 px-4 hover:bg-red-800'
         onClick={()=>navigate('/')}>Continue Shopping</button>
       </div>

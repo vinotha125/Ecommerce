@@ -12,6 +12,8 @@ import FilterData from './pages/FilterData';
 import ProductDetail from './pages/ProductDetail';
 import About from './pages/About';
 import Contact from './pages/Contact';
+import Dashboard from './pages/Dashboard';
+
 
 function App() {
   const [order, setOrder] = useState(null);
@@ -29,6 +31,7 @@ function App() {
         <Route path="/product/:id" element={<ProductDetail />} /> 
         <Route path="/about" element={<About />} />       {/* ✅ new route */}
         <Route path="/contact" element={<Contact />} />
+        <Route path="/admin/dashboard" element={<Dashboard />} />
       </Routes>
       <Footer />
     </BrowserRouter>

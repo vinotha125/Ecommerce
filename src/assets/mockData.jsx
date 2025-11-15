@@ -14,70 +14,70 @@ export const mockData=[
 {
   id:1,
   image: Image10,
-  name: "Product 1",
+  name: "Laptop",
   price: 29.99,
 
 },
 {
   id:2,
   image: Image9,
-  name: "Product 2",
+  name: "Headphone",
   price: 40.99,
 
 },
 {
   id:3,
   image: Image8,
-  name: "Product 3",
+  name: "Sandle",
   price: 60.99,
 
 },
 {
   id:4,
   image: Image7,
-  name: "Product 4",
+  name: "Shirt",
   price: 24.00,
 
 },
 {
   id:5,
   image: Image6,
-  name: "Product 5",
+  name: "Robot",
   price: 70.00,
 
 },
 {
   id:6,
   image: Image5,
-  name: "Product 6",
+  name: "Cap",
   price: 89.99,
 
 },
 {
   id:7,
   image: Image4,
-  name: "Product 7",
+  name: "Dove",
   price: 29.99,
 
 },
 {
   id:8,
   image: Image3,
-  name: "Product 8",
+  name: "Watch",
   price: 76.00,
 
 },
 {
   id:9,
   image: Image2,
-  name: "Product 9",
+  name: "Shoe",
   price: 35.00,
 
 },
 {
   id:10,
   image: Image1,
-  name: "Product 10",
+  name: "bag",
   price: 80.00,
 
 },

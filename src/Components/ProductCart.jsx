@@ -31,7 +31,7 @@ const ProductCart = ({ product }) => {
 
         {/* Price + Stars in one line */}
         <div className="flex items-center justify-between mb-3">
-          <p className="text-gray-700 font-medium">${product.price}</p>
+          <p className="text-gray-700 font-medium">₹{product.price}</p>
           <div className="flex items-center">
             <FaStar className="text-yellow-500" />
             <FaStar className="text-yellow-500" />

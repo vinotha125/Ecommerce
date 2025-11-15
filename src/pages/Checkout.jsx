@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { addOrder } from "../redux/orderSlice";
+
 
 const Checkout = ({setOrder}) => {
   const [billingToggle, setBillingToggle] = useState(true);
@@ -16,19 +19,23 @@ const Checkout = ({setOrder}) => {
 
 
   const cart = useSelector((state) => state.cart);
-  const navigate =useNavigate()
+  const navigate = useNavigate();
+  const dispatch = useDispatch(); 
 
-  const handleOrder =() =>{
-    const newOrder={
-         products: cart.products,
-         orderNumber:"1234",
-         shippingInformation: shippingInfo,
-         totalPrice:cart.totalPrice
-    }
-    setOrder(newOrder)
-    navigate('/order-confirmation')
-  }
+ const handleOrder = () => {       // ✅ replace this function
+    const newOrder = {
+      id: Date.now(),
+      products: cart.products,
+      orderNumber: "1234",
+      shippingInformation: shippingInfo,
+      totalPrice: cart.totalPrice,
+      date: new Date().toLocaleString(),
+    };
 
+    dispatch(addOrder(newOrder));  // save order
+    setOrder(newOrder);
+    navigate('/order-confirmation');
+  };
   return (
     <div>
       <div className="container mx-auto py-8 min-h-96 px-4 md:px-16 lg:px-24">
@@ -225,7 +232,7 @@ const Checkout = ({setOrder}) => {
                   <img src={product.image} alt={product.name} className="w-16 h-16 mr-3 object-cover" />
                   <div>
                     <h4 className="font-medium">{product.name}</h4>
-                    <p>&#8377;{product.price} × {product.quantity}</p>
+                    <p>${product.price} × {product.quantity}</p>
                   </div>
                 </div>
               ))}

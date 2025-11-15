@@ -53,6 +53,8 @@ export const Navbar = () => {
           <Link to="/shop" className='hover:text-red-600 transition'>Shop</Link>
           <Link to="/about" className='hover:text-red-600 transition'>About</Link>
           <Link to="/contact" className='hover:text-red-600 transition'>Contact</Link>
+          <Link to="/admin/dashboard" className="hover:text-red-600">Dashboard</Link>
+
         </div>
 
         {/* RIGHT: Cart + Login */}

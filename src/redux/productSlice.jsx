@@ -20,8 +20,12 @@ const productSlice = createSlice({
         product.name.toLowerCase().includes(state.searchTerm.toLowerCase())
       );
     },
+    addProduct(state, action) {  // ✅ Add this reducer
+      state.products.push(action.payload);
+      state.filteredData.push(action.payload); // optional: update filteredData too
+    },
   },
 });
 
-export const { setProducts, setSearchTerm } = productSlice.actions;
+export const { setProducts, setSearchTerm, addProduct } = productSlice.actions; // ✅ export new action
 export default productSlice.reducer;
