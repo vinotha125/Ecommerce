@@ -1,64 +1,58 @@
+// src/pages/Dashboard.jsx
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { addProduct } from "../redux/productSlice";
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  Tooltip,
-  CartesianGrid,
-  ResponsiveContainer,
-} from "recharts";
 import { FaStar, FaStarHalfAlt, FaRegStar, FaTachometerAlt, FaBoxOpen, FaShoppingCart } from "react-icons/fa";
+import MonthlyRevenuePieChart from "../Components/MonthlyRevenueBarChart";
+import CategorySalesPieChart from "../Components/CategorySalesPieChart";
 
 const Dashboard = () => {
-  const products = useSelector((state) => state.product.products);
-  const orders = useSelector((state) => state.order.orders);
   const dispatch = useDispatch();
+  const products = useSelector((state) => state.product?.products || []);
+  const orders = useSelector((state) => state.order?.orders || []);
 
   const [activeTab, setActiveTab] = useState("dashboard");
-  const [newProduct, setNewProduct] = useState({
-    name: "",
-    price: "",
-    image: "",
-    rating: 0,
-  });
+  const [newProduct, setNewProduct] = useState({ name: "", price: "", image: "", rating: 0 });
 
-  const totalRevenue = orders.reduce((sum, order) => sum + order.totalPrice, 0);
+  const totalRevenue = orders.reduce((sum, order) => sum + (order.totalPrice || 0), 0);
 
-  const chartData = orders.map((order) => ({
-    name: `Order #${order.orderNumber}`,
-    revenue: order.totalPrice,
-  }));
-
+  // Render star rating
   const renderStars = (rating) => {
     const stars = [];
+    const numRating = Number(rating);
     for (let i = 1; i <= 5; i++) {
-      if (rating >= i) stars.push(<FaStar key={i} className="text-yellow-400 inline" />);
-      else if (rating >= i - 0.5)
-        stars.push(<FaStarHalfAlt key={i} className="text-yellow-400 inline" />);
+      if (numRating >= i) stars.push(<FaStar key={i} className="text-yellow-400 inline" />);
+      else if (numRating >= i - 0.5) stars.push(<FaStarHalfAlt key={i} className="text-yellow-400 inline" />);
       else stars.push(<FaRegStar key={i} className="text-yellow-400 inline" />);
     }
     return stars;
   };
 
+  // Add new product
   const handleAddProduct = () => {
-    if (!newProduct.name || !newProduct.price || !newProduct.image || newProduct.rating <= 0) {
-      return alert("Please fill all fields correctly!");
+    const { name, price, image, rating } = newProduct;
+    if (!name || !price || !image || rating < 0 || rating > 5) {
+      return alert("Please fill all fields correctly! Rating must be 0-5");
     }
 
     const productData = {
       id: Date.now(),
-      ...newProduct,
-      price: parseFloat(newProduct.price),
-      rating: parseFloat(newProduct.rating),
+      name,
+      price: parseFloat(price),
+      image,
+      rating: parseFloat(rating),
     };
 
     dispatch(addProduct(productData));
     setNewProduct({ name: "", price: "", image: "", rating: 0 });
     alert("Product added!");
   };
+
+  // Per-order revenue chart data
+  const barChartData = orders.map((order, idx) => ({
+    name: `Order ${order.orderNumber || idx + 1}`,
+    total: order.totalPrice,
+  }));
 
   return (
     <div className="flex min-h-screen">
@@ -95,10 +89,12 @@ const Dashboard = () => {
 
       {/* Main Content */}
       <main className="flex-1 bg-gray-100 p-6 overflow-auto">
+        {/* Dashboard */}
         {activeTab === "dashboard" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Dashboard</h1>
 
+            {/* Top Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
               <div className="bg-blue-500 text-white p-6 rounded-lg shadow">
                 <h2 className="text-xl font-semibold">Total Products</h2>
@@ -114,30 +110,24 @@ const Dashboard = () => {
               </div>
             </div>
 
-            <div className="bg-white p-6 rounded-lg shadow mb-8">
-              <h2 className="text-xl font-semibold mb-4">Revenue per Order</h2>
-              {orders.length === 0 ? (
-                <p>No orders yet.</p>
-              ) : (
-                <ResponsiveContainer width="100%" height={300}>
-                  <BarChart data={chartData}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Bar dataKey="revenue" fill="#8884d8" />
-                  </BarChart>
-                </ResponsiveContainer>
-              )}
+            {/* Charts */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="bg-white p-6 rounded-lg shadow">
+                <MonthlyRevenuePieChart />
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow">
+                <h2 className="text-xl font-semibold mb-4">Revenue per Order</h2>
+                <CategorySalesPieChart />
+              </div>
             </div>
           </>
         )}
 
+        {/* Products Tab */}
         {activeTab === "products" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Products</h1>
 
-            {/* Add New Product */}
             <div className="bg-white p-6 rounded-lg shadow mb-8">
               <h2 className="text-xl font-semibold mb-4">Add New Product</h2>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-4">
@@ -167,6 +157,9 @@ const Dashboard = () => {
                   placeholder="Rating (0-5)"
                   className="border p-2 rounded"
                   value={newProduct.rating}
+                  min={0}
+                  max={5}
+                  step={0.5}
                   onChange={(e) => setNewProduct({ ...newProduct, rating: e.target.value })}
                 />
               </div>
@@ -178,7 +171,6 @@ const Dashboard = () => {
               </button>
             </div>
 
-            {/* Products Table */}
             <div className="bg-white p-6 rounded-lg shadow">
               <h2 className="text-xl font-semibold mb-4">Products List</h2>
               {products.length === 0 ? (
@@ -197,7 +189,7 @@ const Dashboard = () => {
                       <tr key={product.id}>
                         <td className="p-2 border">{product.name}</td>
                         <td className="p-2 border">₹{product.price}</td>
-                        <td className="p-2 border">{renderStars(product.rating)}</td>
+                        <td className="p-2 border">{renderStars(Number(product.rating))}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -207,6 +199,7 @@ const Dashboard = () => {
           </>
         )}
 
+        {/* Orders Tab */}
         {activeTab === "orders" && (
           <>
             <h1 className="text-3xl font-bold mb-6">Orders</h1>

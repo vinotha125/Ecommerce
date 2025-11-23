@@ -13,6 +13,10 @@ import ProductDetail from './pages/ProductDetail';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Dashboard from './pages/Dashboard';
+import Register from './Components/Register';
+import Login from './Components/Login';
+
+
 
 
 function App() {
@@ -27,11 +31,17 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/checkout" element={<Checkout setOrder={setOrder} />} /> 
         <Route path="/order-confirmation" element={<Order order={order} />} /> 
-         <Route path="/filter-data" element={<FilterData />} /> 
+        <Route path="/filter-data" element={<FilterData />} /> 
         <Route path="/product/:id" element={<ProductDetail />} /> 
         <Route path="/about" element={<About />} />       {/* ✅ new route */}
         <Route path="/contact" element={<Contact />} />
         <Route path="/admin/dashboard" element={<Dashboard />} />
+        <Route path="/register" element={<Register />} />
+       <Route path="/login" element={<Login />} />
+       
+
+
+
       </Routes>
       <Footer />
     </BrowserRouter>
