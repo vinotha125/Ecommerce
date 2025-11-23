@@ -7,6 +7,7 @@ import Login from './Login';
 import Register from './Register';
 import { setSearchTerm } from '../redux/productSlice';
 import { auth } from './firebase.jsx';
+import { signOut } from "firebase/auth";   // 🔥 added
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -22,7 +23,6 @@ const Navbar = () => {
     dispatch(setSearchTerm(search));
   };
 
-  // 🔥 SAME LOGIC YOU USED IN HOME
   const handleProtectedClick = (e, path) => {
     if (!auth.currentUser) {
       e.preventDefault();
@@ -31,6 +31,16 @@ const Navbar = () => {
     } else {
       navigate(path);
     }
+  };
+
+  // ✅ LOGOUT FUNCTION
+  const handleLogout = () => {
+    signOut(auth)
+      .then(() => {
+        console.log("Logged Out");
+        navigate("/");  // optional
+      })
+      .catch((err) => console.error(err));
   };
 
   return (
@@ -96,7 +106,7 @@ const Navbar = () => {
             <FaSearch className="absolute top-2 right-2 text-red-500" />
           </form>
 
-          {/* Login Button */}
+          {/* Login / Logout */}
           {!auth.currentUser ? (
             <button
               className="text-lg font-medium hover:text-red-600 transition"
@@ -105,9 +115,19 @@ const Navbar = () => {
               Login | Register
             </button>
           ) : (
-            <span className="text-green-600 font-semibold">
-              {auth.currentUser.email}
-            </span>
+            <div className="flex items-center gap-2">
+              <span className="text-green-600 font-semibold">
+                {auth.currentUser.email}
+              </span>
+
+              {/* 🔥 LOGOUT BUTTON */}
+              <button
+                onClick={handleLogout}
+                className="text-red-600 font-semibold hover:underline"
+              >
+                Logout
+              </button>
+            </div>
           )}
         </div>
       </div>
