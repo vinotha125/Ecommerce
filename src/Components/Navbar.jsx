@@ -1,18 +1,20 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaSearch, FaShoppingCart } from 'react-icons/fa';
+import { FaSearch, FaShoppingCart, FaBars, FaTimes } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import Modal from './Modal';
 import Login from './Login';
 import Register from './Register';
 import { setSearchTerm } from '../redux/productSlice';
 import { auth } from './firebase.jsx';
-import { signOut } from "firebase/auth";   // 🔥 added
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const [search, setSearch] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false); // 🌟 MOBILE MENU
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -33,13 +35,9 @@ const Navbar = () => {
     }
   };
 
-  // ✅ LOGOUT FUNCTION
   const handleLogout = () => {
     signOut(auth)
-      .then(() => {
-        console.log("Logged Out");
-        navigate("/");  // optional
-      })
+      .then(() => navigate("/"))
       .catch((err) => console.error(err));
   };
 
@@ -52,39 +50,34 @@ const Navbar = () => {
           ShopEase
         </Link>
 
-        {/* Nav Links */}
+        {/* Mobile Menu Icon */}
+        <button
+          className="md:hidden text-2xl"
+          onClick={() => setMenuOpen(!menuOpen)}
+        >
+          {menuOpen ? <FaTimes /> : <FaBars />}
+        </button>
+
+        {/* Desktop Menu */}
         <div className="hidden md:flex justify-center space-x-6 font-semibold text-lg">
           <Link to="/" className="hover:text-red-600 transition">Home</Link>
 
-          <button
-            onClick={(e) => handleProtectedClick(e, "/shop")}
-            className="hover:text-red-600 transition"
-          >
-            Shop
-          </button>
+          <button onClick={(e) => handleProtectedClick(e, "/shop")}
+            className="hover:text-red-600 transition">Shop</button>
 
-          <button
-            onClick={(e) => handleProtectedClick(e, "/about")}
-            className="hover:text-red-600 transition"
-          >
-            About
-          </button>
+          <button onClick={(e) => handleProtectedClick(e, "/about")}
+            className="hover:text-red-600 transition">About</button>
 
-          <button
-            onClick={(e) => handleProtectedClick(e, "/contact")}
-            className="hover:text-red-600 transition"
-          >
-            Contact
-          </button>
+          <button onClick={(e) => handleProtectedClick(e, "/contact")}
+            className="hover:text-red-600 transition">Contact</button>
 
           <Link to="/admin/dashboard" className="hover:text-red-600 transition">
             Dashboard
           </Link>
         </div>
 
-        {/* Cart + Search + Login */}
-        <div className="flex items-center gap-4">
-
+        {/* Desktop Right Section */}
+        <div className="hidden md:flex items-center gap-4">
           {/* Cart */}
           <Link to="/cart" className="relative">
             <FaShoppingCart className="text-lg" />
@@ -96,7 +89,7 @@ const Navbar = () => {
           </Link>
 
           {/* Search */}
-          <form onSubmit={handleSearch} className="relative hidden md:block">
+          <form onSubmit={handleSearch} className="relative">
             <input
               type="text"
               placeholder="Search products..."
@@ -120,7 +113,6 @@ const Navbar = () => {
                 {auth.currentUser.email}
               </span>
 
-              {/* 🔥 LOGOUT BUTTON */}
               <button
                 onClick={handleLogout}
                 className="text-red-600 font-semibold hover:underline"
@@ -131,6 +123,84 @@ const Navbar = () => {
           )}
         </div>
       </div>
+
+      {/* 🌟 MOBILE MENU DROPDOWN */}
+      {menuOpen && (
+        <div className="md:hidden bg-white px-6 py-4 space-y-4 shadow-md">
+
+          <Link to="/" className="block font-semibold text-lg hover:text-red-600"
+            onClick={() => setMenuOpen(false)}>Home</Link>
+
+          <button
+            onClick={(e) => { handleProtectedClick(e, "/shop"); setMenuOpen(false); }}
+            className="block font-semibold text-lg hover:text-red-600"
+          >
+            Shop
+          </button>
+
+          <button
+            onClick={(e) => { handleProtectedClick(e, "/about"); setMenuOpen(false); }}
+            className="block font-semibold text-lg hover:text-red-600"
+          >
+            About
+          </button>
+
+          <button
+            onClick={(e) => { handleProtectedClick(e, "/contact"); setMenuOpen(false); }}
+            className="block font-semibold text-lg hover:text-red-600"
+          >
+            Contact
+          </button>
+
+          <Link to="/admin/dashboard"
+            onClick={() => setMenuOpen(false)}
+            className="block font-semibold text-lg hover:text-red-600">
+            Dashboard
+          </Link>
+
+          {/* Mobile Cart */}
+          <Link to="/cart" className="relative flex items-center gap-2">
+            <FaShoppingCart />
+            <span>Cart</span>
+            {products.length > 0 && (
+              <span className="absolute top-0 left-16 bg-red-600 text-white text-xs font-semibold w-5 h-5 flex items-center justify-center rounded-full">
+                {products.length}
+              </span>
+            )}
+          </Link>
+
+          {/* Mobile Search */}
+          <form onSubmit={handleSearch} className="flex gap-2">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="border py-2 px-3 rounded w-full"
+              onChange={(e) => setSearch(e.target.value)}
+            />
+            <button>
+              <FaSearch className="text-red-500 mt-2" />
+            </button>
+          </form>
+
+          {/* Mobile Login/Logout */}
+          {!auth.currentUser ? (
+            <button
+              className="text-lg font-medium hover:text-red-600"
+              onClick={() => { setIsLogin(true); setIsModalOpen(true); setMenuOpen(false); }}
+            >
+              Login | Register
+            </button>
+          ) : (
+            <button
+              onClick={() => { handleLogout(); setMenuOpen(false); }}
+              className="text-red-600 font-semibold"
+            >
+              Logout
+            </button>
+          )}
+
+        </div>
+      )}
 
       {/* Modal */}
       <Modal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen}>
